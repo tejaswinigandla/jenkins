@@ -349,3 +349,55 @@ Node controller
 Endpoint Controller
 	- Populates the information of endpoints of all the objects.	
 
+		
+Service (svc)
+	- Service is an REST api objects with set of policies for defining the 
+	  access to set of pods.
+	- Services are the default load balancer in k8s.
+	- services are always created and works at cluster level.
+	- services are the networking configurations which we do in k8s.
+	- k8s prefers to use 30000 - 50000 range of ports to define services.
+
+1. ClusterIP
+	- This is the default type of service which exposes the IPs of pod to the other pods 
+	  with in the same cluster.
+	- ClusterIP cannot be accessed outside cluster.
+	- services are the default loadbalancers of k8s.
+	
+	apiVersion: v1 
+	kind: Service 
+	metadata:
+	     name: my-svc 
+	spec: 
+		type: ClusterIP
+		selector: 
+			app: my-nginx 
+		ports: 
+			- name: http
+			  port: 30080
+			  targetPort: 8080	
+
+2. nodePort 
+	- A nodeport service is the most primitive way to get the external traffic directed to our services / applications 
+	  running inside a pod within the cluster.
+	- By default NodePort acts as a load balancer. 
+	- Automatically a ClusterIP will be created internally. 
+	
+		NodePort = ClusterIP + a port mapping to the all the nodes of cluster.
+		
+	- If we wont specify any port while creating nodeport, k8s will automatically asign a port between the range 30000 - 32767
+	- By default nodeport will open the port in all the node in cluster including master node.	
+	
+	apiVersion: v1 
+	kind: Service 
+	metadata:
+	     name: my-svc 
+	spec: 
+		type: NodePort
+		selector: 
+			app: my-nginx 
+		ports: 
+			- name: http
+			  nodePort:30082	
+			  port: 8080
+			  targetPort: 80
