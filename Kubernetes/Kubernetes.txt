@@ -401,3 +401,76 @@ Service (svc)
 			  nodePort:30082	
 			  port: 8080
 			  targetPort: 80
+
+		
+3. Load Balancer
+	- It is a type of service which is used to link external load balancer to the cluster.
+	- This type of service is used by cloud providers and this service is completely depends on cloud providers. 
+	- K8s now provides a better alternative for this service type which is called Ingress.
+
+
+4. Headless service 
+	headless service 
+		  - When we neither need nor want loadbalancig and when we don't want a single IP to a service, we need to use headless service.
+		  - Headless service returns all the ips of the pods it is selecting.
+		  - headless service is created by specifying none for clusterIP 
+		  - headless service is usually used with statefulsets.
+		  
+	headless with in cluster 
+
+		apiVersion: v1 
+		kind: Service 
+		metadata:
+			 name: my-svc 
+		spec: 
+			clusterIP: None
+			selector: 
+				app: my-nginx 
+			ports: 
+				- name: http
+				  port: 30080
+				  targetPort: 8080
+				  
+	headless with nodeport 			  
+		nodePort = headless + port mapping 
+		
+		apiVersion: v1 
+		kind: Service 
+		metadata:
+			 name: my-svc 
+		spec: 
+			clusterIP: None
+			type: NodePort
+			selector: 
+				app: my-nginx 
+			ports: 
+				- name: http
+				  nodePort:30082	
+				  port: 8080
+				  targetPort: 80
+				  
+	1. Create a headless service with statefulsets
+	2. Login to any one of pod 
+	3. apt install dnsutils and do nslookup <service_name>
+
+
+Assignment: 
+	
+A. How to use custom images / connect to a registry through k8s 
+	1. Login to the docker hub account 
+		  docker login 
+	2. Create a app to print ip 
+			using flask 
+	3. 	push the image to your registry 
+	4 use the above custom image in k8s spec file.
+	
+		image: <username>/<regirty_name>:<tag>
+		imagePullPolicy: IfNotPresent
+		
+	5. Create a service of type NodePort attaching the above pods 
+
+B. How to access application running on one pod from another pod 
+
+C. Demo in service to service communication
+
+D. Headless service example (Need to show the list of all pod ips) 
